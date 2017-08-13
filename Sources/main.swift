@@ -119,7 +119,7 @@ func gen_pfa(infile: String, outfile: String) {
     var twin : [(String, String)] = []
     for i in 0..<parsed.count {
         let nsrange = parsed[i]
-        let sentence = (full as NSString).substring(with: nsrange).trimmingCharacters(in: .newlines)
+        let sentence = (full as NSString).substring(with: nsrange).trimmingCharacters(in: .whitespacesAndNewlines)
         let alt = small_change(sentence)
         twin.append((sentence, alt))
     }
@@ -129,12 +129,12 @@ func gen_pfa(infile: String, outfile: String) {
         let (before, after) = twin[i]
         let r = Int(arc4random_uniform(UInt32(2)))
         if r == 0 {
-            wicked.append("P1 " + before)
-            wicked.append("P2 " + after)
+            wicked.append("P1\t" + before)
+            wicked.append("P2\t" + after)
             wicked.append("C1\n")
         } else {
-            wicked.append("P1 " + after)
-            wicked.append("P2 " + before)
+            wicked.append("P1\t" + after)
+            wicked.append("P2\t" + before)
             wicked.append("C2\n")
         }
     }
