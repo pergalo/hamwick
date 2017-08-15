@@ -97,6 +97,41 @@ var skills = [
         alt.replaceCharacters(in: s1.range, with: s2.token)
         return (alt as String)
     },
+
+    "wrong_number": {
+        (original: String) -> String in
+        
+        var seg = tag_them(input: original, tag_scheme: NSLinguisticTagSchemeLemma)
+        let bes = seg.filter {(_, tag, _) in tag == "be"}
+        
+        guard seg.count > 1 else {
+            print("*** not enough be(s) to change.")
+            return original
+        }
+        
+        let singular = ["is", "am", "be", "been", "being", "was"]
+        let plural   = ["are", "were"]
+        
+        let alt = NSMutableString(string: original)
+        for b in bes.reversed() {
+            let (token, tag, range) = b
+            var now = ""
+            
+            if singular.contains(token.lowercased()) {
+                let r = Int(arc4random_uniform(UInt32(plural.count)))
+                now = plural[r]
+            } else {
+                let r = Int(arc4random_uniform(UInt32(singular.count)))
+                now = singular[r]
+            }
+            
+            if CharacterSet.uppercaseLetters.contains(token.unicodeScalars.first!) {
+                now = now.capitalized
+            }
+            alt.replaceCharacters(in: range, with: now)
+        }
+        return (alt as String)
+    },
     
     "big_mess" : {
         (original: String) -> String in
@@ -114,6 +149,7 @@ func gen_pfa(infile: String, outfile: String) {
     let parsed = s4(input: full)
     
     //let small_change = skills["first_noun_last_noun"]!
+    //let small_change = skills["wrong_number"]!
     let small_change = skills["last_two_words"]!
     
     var twin : [(String, String)] = []
