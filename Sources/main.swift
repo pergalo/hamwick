@@ -175,7 +175,7 @@ func gen_pfa(infile: String, outfile: String) {
         }
     }
     
-    let ready = wicked.joined(separator: "\r\n")
+    let ready = wicked.joined(separator: "\n")
 
     do {
         try ready.write(toFile: outfile, atomically: true, encoding: .utf8)
